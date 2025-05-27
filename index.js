@@ -52,7 +52,6 @@ function mostrarAyuda() {
 function mostrarError(error) {
     mostrarAplicacion();
     console.log(`\n*** Error: ${error} ***`);
-    mostrarAyuda();
 }
 
 /**
@@ -120,6 +119,13 @@ function verificarArgumentos(args) {
 }
 
 
+/**
+ * Realiza una petición HTTP a la API indicada por la URI
+* y muestra la respuesta en la consola.
+* @async
+* @param {String} URI - La URI de la API a la que se realizará la petición
+* @param {object} config - Configuración de la petición HTTP (método, cabeceras, cuerpo)
+*/
 async function ejecutarPeticion(URI, config) {
     try {
         const respuesta = await fetch(URI, config);
@@ -140,8 +146,8 @@ async function ejecutarPeticion(URI, config) {
 const args = process.argv.slice(2);
 
 if (verificarArgumentos(args)){
-    console.log(`Argumentos: ${args.join(' ')}`);
     
+    // Si los argumentos son válidos, se procede a ejecutar la petición    
     mostrarAplicacion();
     console.log();
 
@@ -154,11 +160,11 @@ if (verificarArgumentos(args)){
     switch (method) {
         case 'GET':
             id = args[2] ? args[2] : '';
-            if (id) {
+            if (id) { // Si se especifica un ID
                 titulo = `Producto con ID: ${id}`;
                 URI = `${URL}/${id}`;
             }
-            else {
+            else { // Si no se especifica un ID
                 titulo = 'Lista completa de productos\n';
             }
             config.method = 'GET';
@@ -170,13 +176,30 @@ if (verificarArgumentos(args)){
             URI = `${URL}/${id}`;
             config.method = 'DELETE';
             break;
+
+        case 'POST':
+            titulo = `Creando nuevo producto: ${args[2]}`;
+            // Se crea un objeto producto con los datos proporcionados
+            producto.title = args[2];
+            producto.price = parseFloat(args[3]);
+            producto.category = args[4];
+
+            config.method = 'POST';
+            config.headers = {
+                'Content-Type': 'application/json'
+            };
+            config.body = JSON.stringify(producto);
+            break;
             
         default:
             break;
     }
 
+    // Se muestra el título y se ejecuta la petición
     console.log(titulo);
     ejecutarPeticion(URI, config);
-
 }
-
+else {
+    // Si los argumentos no son válidos, se muestra la ayuda
+    mostrarAyuda();
+}
