@@ -163,7 +163,14 @@ if (verificarArgumentos(args)){
             }
             config.method = 'GET';
             break;
-
+    
+        case 'DELETE':
+            id = args[2];
+            titulo = `Eliminando producto con ID: ${id}`;
+            URI = `${URL}/${id}`;
+            config.method = 'DELETE';
+            break;
+            
         default:
             break;
     }
