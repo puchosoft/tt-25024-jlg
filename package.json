@@ -1,0 +1,22 @@
+{
+  "name": "proyecto-final-tt-25024-jlg",
+  "version": "1.0.0",
+  "description": "Sistema de gestion de productos de una tienda on-line desde linea de comandos",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/puchosoft/tt-25024-jlg.git"
+  },
+  "keywords": [],
+  "author": "Jose Luis Gonzalez",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/puchosoft/tt-25024-jlg/issues"
+  },
+  "homepage": "https://github.com/puchosoft/tt-25024-jlg#readme"
+}
