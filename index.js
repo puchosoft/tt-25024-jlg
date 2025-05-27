@@ -7,17 +7,36 @@
 // |     Jose Luis Gonzalez       |
 // +------------------------------+
 
+// Conjunto de comandos válidos
 const comandos = new Set([
     'GET',
     'POST',
     'DELETE'
 ]);
 
+// Primer parametro obligatorio para los comandos
 const parametro1 = 'products'
 
-// Muestra las instrucciones de uso (comandos y parametros)
+// URL de la API de productos
+const URL = 'https://fakestoreapi.com/products';
+
+// Configuración de la solicitud HTTP
+const config = {};
+
+/**
+ * Muestra el encabezado de la aplicación
+ */
+function mostrarAplicacion() {
+    console.log('+-----------------------------------+');
+    console.log('| OPS - Online Product Store - v1.0 |');
+    console.log('+-----------------------------------+');
+}
+
+/**
+* Muestra las instrucciones de uso (comandos y parametros)
+*/
 function mostrarAyuda() {
-    console.log('Uso: npm run start <comando> <parametros>\n');
+    console.log('\nUso: npm run start <comando> <parametros>\n');
     console.log('Comandos disponibles:');
     console.log('- GET products - Obtiene la lista completa de productos.');
     console.log('- GET products/<id> - Obtiene el producto indicado por <id>.');
@@ -26,12 +45,22 @@ function mostrarAyuda() {
     console.log();
 }
 
-
+/**
+* Muestra un mensaje de error y las instrucciones de uso
+* @param {string} error - Mensaje de error a mostrar
+*/
 function mostrarError(error) {
-    console.error(`*** Error: ${error} ***\n`);
+    mostrarAplicacion();
+    console.log(`\n*** Error: ${error} ***`);
     mostrarAyuda();
 }
 
+/**
+* Verifica los argumentos proporcionados en la línea de comandos
+* y valida que sean correctos para el comando especificado
+* @param {string[]} args - Argumentos de la línea de comandos
+* @returns {boolean} - Retorna true si los argumentos son válidos, false en caso contrario
+*/
 function verificarArgumentos(args) {
     
     // Verifica si se proporcionaron al menos 2 argumentos
@@ -90,10 +119,57 @@ function verificarArgumentos(args) {
     return true;
 }
 
+
+async function ejecutarPeticion(URI, config) {
+    try {
+        const respuesta = await fetch(URI, config);
+        var data = await respuesta.json();
+    } catch (error) {
+        console.log(`Error al realizar la petición: ${error.message}`);
+    } finally {
+        console.log(data);
+        console.log();
+    }
+}
+
+
+// +-------------------+
+// | Proceso Principal |
+// +-------------------+
 // Toma los argumentos de la línea de comandos a partir del 3er argumento
 const args = process.argv.slice(2);
 
 if (verificarArgumentos(args)){
-    console.log('OK\n');
+    console.log(`Argumentos: ${args.join(' ')}`);
     
+    mostrarAplicacion();
+    console.log();
+
+    const method = args[0];
+    var URI = URL;
+    var id = '';
+    var titulo = '';
+    const producto = {};
+
+    switch (method) {
+        case 'GET':
+            id = args[2] ? args[2] : '';
+            if (id) {
+                titulo = `Producto con ID: ${id}`;
+                URI = `${URL}/${id}`;
+            }
+            else {
+                titulo = 'Lista completa de productos\n';
+            }
+            config.method = 'GET';
+            break;
+
+        default:
+            break;
+    }
+
+    console.log(titulo);
+    ejecutarPeticion(URI, config);
+
 }
+
